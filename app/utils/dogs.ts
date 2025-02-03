@@ -1,21 +1,6 @@
-const BASE_URL = "https://frontend-take-home-service.fetch.com";
-
-export async function loginUser(name: string, email: string) {
-  const response = await fetch(`${BASE_URL}/auth/login`, {
-    method: "POST",
-    credentials: "include",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ name, email }),
-  });
-  if (!response.ok) {
-    throw new Error("Login failed. Please check your credentials");
-  }
-  return response;
-}
-
 export async function fetchBreeds() {
   const response = await fetch(
-    "https://frontend-take-home-service.fetch.com/dogs/breeds",
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/dogs/breeds`,
     {
       method: "GET",
       credentials: "include", // Include the auth cookie
@@ -50,7 +35,9 @@ export async function fetchDogs({
   });
 
   const response = await fetch(
-    `https://frontend-take-home-service.fetch.com/dogs/search?${queryParams.toString()}`,
+    `${
+      process.env.NEXT_PUBLIC_API_BASE_URL
+    }/dogs/search?${queryParams.toString()}`,
     {
       method: "GET",
       credentials: "include", // Include the auth cookie
@@ -64,7 +51,7 @@ export async function fetchDogs({
     if (resultIds.length > 0) {
       // Fetch full dog data using the resultIds
       const dogDetailsResponse = await fetch(
-        "https://frontend-take-home-service.fetch.com/dogs",
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/dogs`,
         {
           method: "POST",
           headers: {

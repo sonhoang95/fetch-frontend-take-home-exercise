@@ -1,16 +1,11 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { fetchBreeds, fetchDogs } from "../api/auth";
-
-interface Dog {
-  id: string;
-  img: string;
-  name: string;
-  age: number;
-  zip_code: string;
-  breed: string;
-}
+import { fetchBreeds, fetchDogs } from "@/app/utils/dogs";
+import { Label } from "@/components/ui/label";
+import { Dog } from "../utils/types";
+import DogCard from "../components/DogCard";
+import BreedSelect from "../components/BreedSelect";
 
 function Dashboard() {
   const [dogs, setDogs] = useState<Dog[]>([]);
@@ -23,7 +18,6 @@ function Dashboard() {
   // Fetch breeds
   useEffect(() => {
     fetchBreeds().then((breeds) => {
-      // Do something with the breeds
       setBreeds(breeds);
     });
   }, []);
@@ -56,26 +50,13 @@ function Dashboard() {
   //   console.log("Match:", match);
   // };
 
-  console.log(dogs);
-
   return (
     <div>
-      {/* Breed Filter */}
-      <div>
-        <label>Select Breed:</label>
-        <select
-          onChange={(e) => setSelectedBreed(e.target.value)}
-          value={selectedBreed}
-        >
-          <option value="">All Breeds</option>
-          {breeds.map((breed, index) => (
-            <option key={index} value={breed}>
-              {breed}
-            </option>
-          ))}
-        </select>
-      </div>
-
+      <BreedSelect
+        breeds={breeds}
+        selectedBreed={selectedBreed}
+        setSelectedBreed={setSelectedBreed}
+      />
       <button
         onClick={() =>
           setSortOrder(sortOrder === "breed:asc" ? "breed:desc" : "breed:asc")
@@ -85,27 +66,11 @@ function Dashboard() {
       </button>
 
       {/* Display Dogs */}
-      <div className="grid grid-cols-8">
+      <div className="grid grid-cols-6 gap-6">
         {dogs?.length === 0 ? (
           <p>No dogs found</p>
         ) : (
-          dogs?.map((dog) => (
-            <div key={dog.id}>
-              <img
-                src={dog.img}
-                alt={dog.name}
-                style={{ width: "150px", height: "150px" }}
-              />
-              <h3>{dog.name}</h3>
-              <p>Breed: {dog.breed}</p>
-              <p>Age: {dog.age}</p>
-              {/* <button onClick={() => toggleFavorite(dog.id)}>
-                {favoritedDogs.includes(dog.id)
-                  ? "Remove from Favorites"
-                  : "Add to Favorites"}
-              </button> */}
-            </div>
-          ))
+          dogs?.map((dog) => <DogCard key={dog.id} {...dog} />)
         )}
       </div>
 
