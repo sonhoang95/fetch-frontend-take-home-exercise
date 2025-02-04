@@ -18,7 +18,7 @@ Welcome to the Dog Finder App! This app allows dog lovers to search through a da
 - **React**: JavaScript library for building user interfaces
 - **TailwindCSS**: For styling the app
 - **Fetch API**: For communicating with the backend and getting data about dogs and locations
-- **Component Libraries**: ShadcnUI for out-the-box ready component for usage
+- **ShadcnUI**: Component library with beautiful and ready to use components out-the-box
 
 ## Getting Started
 
@@ -72,6 +72,4 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to view th
 
 3. **Preview Link**:
 
-```bash
 Open [https://fetch-frontend-take-home-exercise-app.vercel.app/](https://fetch-frontend-take-home-exercise-app.vercel.app/) for a fully deployed and working version of the app hosted in Vercel.
-```
