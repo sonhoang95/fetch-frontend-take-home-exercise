@@ -21,11 +21,12 @@ const DogCard = ({
   name,
   age,
   breed,
+  zip_code,
   toggleFavorite,
   favoritedDogs,
 }: DogCardProps) => {
   return (
-    <Card key={id} className="relative">
+    <Card key={id} className="relative h-[350px]">
       <div className="h-1/2">
         <Image
           src={img}
@@ -35,7 +36,7 @@ const DogCard = ({
           className="h-full rounded-t-lg"
         />
       </div>
-      <CardContent className="py-4 h-1/2">
+      <CardContent className="py-4 h-1/2 space-y-2">
         <h2 className="text-lg font-semibold tracking-wide mb-2">{name}</h2>
         <p className="text-gray-600 text-sm">
           <strong>Breed:</strong> {breed}
@@ -43,6 +44,10 @@ const DogCard = ({
         <p className="text-gray-600 text-sm">
           <strong>Age: </strong>
           {age}
+        </p>
+        <p className="text-gray-600 text-sm">
+          <strong>Location: </strong>
+          {zip_code}
         </p>
         <Button
           onClick={() => toggleFavorite(id)}

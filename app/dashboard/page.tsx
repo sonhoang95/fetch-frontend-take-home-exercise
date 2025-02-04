@@ -1,24 +1,15 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
 import { fetchBreeds, fetchDogs, fetchMatchedDog } from "@/app/utils/dogs";
-import { Dog } from "../utils/types";
-import DogCard from "../components/DogCard";
-import BreedSelect from "../components/BreedSelect";
-import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
+import { useEffect, useState } from "react";
+import BreedSelect from "../components/BreedSelect";
+import DogCard from "../components/DogCard";
+import { Dog } from "../utils/types";
 
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
-import { PagePagination } from "../components/PagePagination";
 import BreedSortSelect from "../components/BreedSortSelect";
+import { PagePagination } from "../components/PagePagination";
 
 function Dashboard() {
   const [dogs, setDogs] = useState<Dog[]>([]);
@@ -28,6 +19,8 @@ function Dashboard() {
   const [sortOrder, setSortOrder] = useState("breed:asc");
   const [favoritedDogs, setFavoritedDogs] = useState<string[]>([]);
   const [matchedDog, setMatchedDog] = useState<Dog>();
+  const [totalPages, setTotalPages] = useState(0);
+
   const { toast } = useToast();
 
   // Fetch breeds
@@ -46,7 +39,8 @@ function Dashboard() {
       ageMin: "0",
       ageMax: "100",
     }).then((data) => {
-      setDogs(data);
+      setDogs(data?.dogDetailsData);
+      setTotalPages(data?.totalPages);
     });
   }, [selectedBreed, page, sortOrder]);
 
@@ -88,7 +82,7 @@ function Dashboard() {
 
       {/* Display Dogs */}
       {!matchedDog && (
-        <div className="grid grid-cols-6 gap-6">
+        <div className="grid grid-cols-6 gap-6 mb-10">
           {dogs?.length === 0 ? (
             <p>No dogs found</p>
           ) : (
@@ -107,8 +101,8 @@ function Dashboard() {
       {/* Display Matched Dog */}
       {matchedDog && (
         <div>
-          <h2 className="text-xl font-medium mb-8 text-center">
-            Congratulations! We've found your perfect furry friends!
+          <h2 className="text-xl font-semibold mb-8 text-center">
+            Congratulations! We've found your perfect furry friend!
           </h2>
           <div className="max-w-[300px] h-[400px]">
             <DogCard
@@ -122,7 +116,9 @@ function Dashboard() {
       )}
 
       {/* Pagination */}
-      {!matchedDog && <PagePagination page={page} setPage={setPage} />}
+      {!matchedDog && (
+        <PagePagination page={page} setPage={setPage} totalPages={totalPages} />
+      )}
     </section>
   );
 }

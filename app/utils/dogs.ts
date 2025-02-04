@@ -22,11 +22,10 @@ export async function fetchDogs({
   page = 1,
   sort = "breed:asc",
 }) {
-  const size = 25; // Number of dogs per page
+  const size = 24;
   const from = (page - 1) * size;
 
   const queryParams = new URLSearchParams({
-    breed: breed || "",
     ageMin: ageMin || "0",
     ageMax: ageMax || "100",
     size: size.toString(),
@@ -34,19 +33,25 @@ export async function fetchDogs({
     sort: sort || "breed:asc",
   });
 
+  if (breed) {
+    queryParams.set("breeds", breed);
+  }
+
   const response = await fetch(
     `${
       process.env.NEXT_PUBLIC_API_BASE_URL
     }/dogs/search?${queryParams.toString()}`,
     {
       method: "GET",
-      credentials: "include", // Include the auth cookie
+      credentials: "include",
     }
   );
 
   if (response.ok) {
     const data = await response.json();
+    console.log(data);
     const resultIds = data.resultIds;
+    const totalPages = data.total;
 
     if (resultIds.length > 0) {
       // Fetch full dog data using the resultIds
@@ -63,7 +68,7 @@ export async function fetchDogs({
       );
       if (dogDetailsResponse.ok) {
         const dogDetailsData = await dogDetailsResponse.json();
-        return dogDetailsData;
+        return { dogDetailsData, totalPages };
       } else {
         console.error("Failed to fetch dog details");
       }
@@ -92,7 +97,7 @@ export async function fetchMatchedDog(favoritedDogIds: string[]) {
       throw new Error("Failed to fetch dog match");
     }
 
-    const matchData = await matchResponse.json(); // Assuming API returns a JSON object with a match property
+    const matchData = await matchResponse.json();
 
     // Extract the matched dog ID from the 'match' property
     const matchedDogId = matchData.match;

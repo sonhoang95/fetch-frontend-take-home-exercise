@@ -10,21 +10,39 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 
-import { useState } from "react";
-
 export function PagePagination({
   page,
   setPage,
+  totalPages,
 }: {
   page: number;
   setPage: (page: number) => void;
+  totalPages: number;
 }) {
-  const totalPages = 5; // Example total pages
+  const MAX_VISIBLE_PAGES = 5;
 
   const handlePageChange = (newPage: number) => {
     if (newPage >= 1 && newPage <= totalPages) {
       setPage(newPage);
     }
+  };
+
+  const getVisiblePages = () => {
+    const pages = [];
+    const half = Math.floor(MAX_VISIBLE_PAGES / 2);
+    let start = Math.max(1, page - half);
+    let end = Math.min(totalPages, page + half);
+
+    if (page <= half) {
+      end = Math.min(totalPages, MAX_VISIBLE_PAGES);
+    } else if (page + half >= totalPages) {
+      start = Math.max(1, totalPages - MAX_VISIBLE_PAGES + 1);
+    }
+
+    for (let i = start; i <= end; i++) {
+      pages.push(i);
+    }
+    return pages;
   };
 
   return (
@@ -41,22 +59,45 @@ export function PagePagination({
           />
         </PaginationItem>
 
-        {[...Array(totalPages)].map((_, index) => (
-          <PaginationItem key={index}>
+        {page > MAX_VISIBLE_PAGES && (
+          <>
+            <PaginationItem>
+              <PaginationLink href="#" onClick={(e) => handlePageChange(1)}>
+                1
+              </PaginationLink>
+            </PaginationItem>
+            <PaginationEllipsis />
+          </>
+        )}
+
+        {getVisiblePages().map((pageNumber) => (
+          <PaginationItem key={pageNumber}>
             <PaginationLink
               href="#"
-              isActive={page === index + 1}
+              isActive={page === pageNumber}
               onClick={(e) => {
                 e.preventDefault();
-                handlePageChange(index + 1);
+                handlePageChange(pageNumber);
               }}
             >
-              {index + 1}
+              {pageNumber}
             </PaginationLink>
           </PaginationItem>
         ))}
 
-        {totalPages > 5 && <PaginationEllipsis />}
+        {page < totalPages - MAX_VISIBLE_PAGES + 1 && (
+          <>
+            <PaginationEllipsis />
+            <PaginationItem>
+              <PaginationLink
+                href="#"
+                onClick={(e) => handlePageChange(totalPages)}
+              >
+                {totalPages}
+              </PaginationLink>
+            </PaginationItem>
+          </>
+        )}
 
         <PaginationItem>
           <PaginationNext
