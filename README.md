@@ -1,4 +1,4 @@
-# DogFinder (Fetch Frontend Take-Home Exercise)
+# PetFinder (Fetch Frontend Take-Home Exercise)
 
 Welcome to the Dog Finder App! This app allows dog lovers to search through a database of shelter dogs, filter by breed, and find their perfect furry friend. The app also lets users log in, save their favorite dogs, and generate a match based on their favorites.
 
