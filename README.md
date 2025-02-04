@@ -42,7 +42,7 @@ Ensure you have the following installed:
 
 ### Getting Started
 
-1. **First, run the development server:**:
+1. **First, run the development server:**
 
 ```bash
 npm run dev
@@ -56,7 +56,7 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to view the app in development.
 
-2. **First, build from development server:**:
+2. **First, build from development server:**
 
 ```bash
 npm run build && npm run start
