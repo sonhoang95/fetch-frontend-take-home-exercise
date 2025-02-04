@@ -3,7 +3,7 @@ export async function fetchBreeds() {
     `${process.env.NEXT_PUBLIC_API_BASE_URL}/dogs/breeds`,
     {
       method: "GET",
-      credentials: "include", // Include the auth cookie
+      credentials: "include",
     }
   );
 

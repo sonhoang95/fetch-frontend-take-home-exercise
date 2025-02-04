@@ -29,9 +29,9 @@ export default function LoginForm() {
   return (
     <div className="p-6">
       <div className=" space-y-3 mb-8">
-        <h1 className="text-4xl font-semibold">Login</h1>
+        <h1 className="text-3xl md:text-4xl font-semibold">Login</h1>
         {!isAuthenticated && (
-          <p className="text-gray-500 text-lg font-light">
+          <p className="text-gray-500 md:text-lg font-light">
             Ready to adopt a furry friend? Login to begin...
           </p>
         )}

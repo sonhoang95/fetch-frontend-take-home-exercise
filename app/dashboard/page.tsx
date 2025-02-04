@@ -76,13 +76,13 @@ function Dashboard() {
 
   return (
     <section className="my-8 container mx-auto">
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex flex-col md:flex-row items-center justify-between mb-8">
         <BreedSelect
           breeds={breeds}
           selectedBreed={selectedBreed}
           setSelectedBreed={setSelectedBreed}
         />
-        <div className="flex items-center space-x-6">
+        <div className="flex flex-col md:flex-row items-center space-x-6">
           <BreedSortSelect sortOrder={sortOrder} setSortOrder={setSortOrder} />
           {/* Match Button */}
           <Button onClick={handleMatch}>Generate Match</Button>
@@ -91,7 +91,7 @@ function Dashboard() {
 
       {/* Display Dogs */}
       {!matchedDog && (
-        <div className="grid grid-cols-6 gap-6 mb-10">
+        <div className="grid grid-cols-2 md:grid-cols-6 gap-3 md:gap-6 mb-10">
           {dogs?.length === 0 ? (
             <p>No dogs found</p>
           ) : (
