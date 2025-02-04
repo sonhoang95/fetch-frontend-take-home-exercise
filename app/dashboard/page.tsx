@@ -72,7 +72,7 @@ function Dashboard() {
   };
 
   return (
-    <section className="my-8">
+    <section className="my-8 container mx-auto">
       <div className="flex items-center justify-between mb-8">
         <BreedSelect
           breeds={breeds}

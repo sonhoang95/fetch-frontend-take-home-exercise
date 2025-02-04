@@ -35,7 +35,7 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn }) => {
           <Button onClick={handleLogoutUser}>Logout</Button>
         ) : (
           <Link href="/login">
-            <Button>Login</Button>
+            <Button size="lg">Login</Button>
           </Link>
         )}
       </div>

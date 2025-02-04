@@ -4,7 +4,7 @@ import CartoonDogImg from "@/public/images/cartoon-dog.jpg";
 
 const LoginPage = () => {
   return (
-    <section className="flex gap-24 items-center justify-center min-h-screen">
+    <section className="flex gap-24 items-center justify-center min-h-screen container mx-auto">
       {/* Image Container */}
       <div className="flex-1">
         <Image
