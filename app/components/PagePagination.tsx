@@ -88,10 +88,7 @@ export function PagePagination({
           <>
             <PaginationEllipsis />
             <PaginationItem>
-              <PaginationLink
-                href="#"
-                onClick={(e) => handlePageChange(totalPages)}
-              >
+              <PaginationLink onClick={() => handlePageChange(totalPages)}>
                 {totalPages}
               </PaginationLink>
             </PaginationItem>

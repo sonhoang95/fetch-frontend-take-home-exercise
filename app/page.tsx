@@ -1,8 +1,18 @@
+"use client";
+
 import Image from "next/image";
 import dogPortrait from "@/public/images/dog-portrait.jpg";
 import CtaButton from "./components/CtaButton";
+import { useRouter } from "next/navigation";
+import { useAuth } from "./context/AuthContext";
 
 export default function Home() {
+  const router = useRouter();
+  const { isAuthenticated } = useAuth();
+
+  if (!isAuthenticated) {
+    router.push("/login");
+  }
   return (
     <section className="relative w-full h-[800px] md:h-screen">
       {/* Responsive image */}

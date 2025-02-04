@@ -7,13 +7,11 @@ import { useEffect, useState } from "react";
 import BreedSelect from "../components/BreedSelect";
 import DogCard from "../components/DogCard";
 import { Dog } from "../utils/types";
-
+import { Input } from "@/components/ui/input";
+import { useRouter, useSearchParams } from "next/navigation";
 import BreedSortSelect from "../components/BreedSortSelect";
 import { PagePagination } from "../components/PagePagination";
 import { useAuth } from "../context/AuthContext";
-import { useRouter } from "next/navigation";
-import { Input } from "@/components/ui/input";
-import Link from "next/link";
 
 function Dashboard() {
   const [dogs, setDogs] = useState<Dog[]>([]);
@@ -24,33 +22,43 @@ function Dashboard() {
   const [favoritedDogs, setFavoritedDogs] = useState<string[]>([]);
   const [matchedDog, setMatchedDog] = useState<Dog>();
   const [totalPages, setTotalPages] = useState(0);
+  const [ageMin, setAgeMin] = useState("");
+  const [ageMax, setAgeMax] = useState("");
 
   const router = useRouter();
   const { isAuthenticated } = useAuth();
   const { toast } = useToast();
 
-  // Fetch breeds
   useEffect(() => {
-    fetchBreeds().then((breeds) => {
-      setBreeds(breeds);
-    });
+    fetchBreeds().then(setBreeds);
   }, []);
 
-  // Fetch dogs based on filters
+  // Update query params on filter changes
+  useEffect(() => {
+    const queryParams = new URLSearchParams();
+
+    if (selectedBreed) queryParams.set("breed", selectedBreed);
+    if (sortOrder) queryParams.set("sort", sortOrder);
+    if (page) queryParams.set("page", page.toString());
+    if (ageMin) queryParams.set("ageMin", ageMin);
+    if (ageMax) queryParams.set("ageMax", ageMax);
+
+    router.push(`/dashboard?${queryParams.toString()}`);
+  }, [selectedBreed, sortOrder, page, ageMin, ageMax, router]);
+
   useEffect(() => {
     fetchDogs({
       breed: selectedBreed,
       page,
       sort: sortOrder,
-      ageMin: "0",
-      ageMax: "100",
+      ageMin,
+      ageMax,
     }).then((data) => {
       setDogs(data?.dogDetailsData);
       setTotalPages(data?.totalPages);
     });
-  }, [selectedBreed, page, sortOrder]);
+  }, [selectedBreed, page, sortOrder, ageMin, ageMax]);
 
-  // Handle favorite dog selection
   const toggleFavorite = (dogId: string) => {
     setFavoritedDogs((prev) => {
       const isFavorited = prev.includes(dogId);
@@ -79,7 +87,7 @@ function Dashboard() {
   };
 
   if (!isAuthenticated) {
-    router.push("/login"); // Redirect to login if not authenticated
+    router.push("/login");
     return null;
   }
 
@@ -94,20 +102,28 @@ function Dashboard() {
               selectedBreed={selectedBreed}
               setSelectedBreed={setSelectedBreed}
             />
-            <Input placeholder="Age" className="max-w-[200px]" />
-            <Input placeholder="Location (Zipcode)" className="max-w-[200px]" />
+            <Input
+              placeholder="Min Age"
+              className="max-w-[200px]"
+              value={ageMin}
+              onChange={(e) => setAgeMin(e.currentTarget.value)}
+            />
+            <Input
+              placeholder="Max Age"
+              className="max-w-[200px]"
+              value={ageMax}
+              onChange={(e) => setAgeMax(e.currentTarget.value)}
+            />
           </div>
         </div>
         <div className="flex flex-col md:flex-row items-center space-x-6">
           <BreedSortSelect sortOrder={sortOrder} setSortOrder={setSortOrder} />
-          {/* Match Button */}
           <Button onClick={handleMatch} disabled={favoritedDogs.length <= 0}>
             Generate Match
           </Button>
         </div>
       </div>
 
-      {/* Display Dogs */}
       <div className="grid grid-cols-2 md:grid-cols-6 gap-3 md:gap-6 mb-10">
         {dogs?.length === 0 ? (
           <p>No dogs found</p>
@@ -123,7 +139,6 @@ function Dashboard() {
         )}
       </div>
 
-      {/* Pagination */}
       {!matchedDog && (
         <PagePagination page={page} setPage={setPage} totalPages={totalPages} />
       )}

@@ -1,15 +1,8 @@
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Dog } from "../utils/types";
-import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import { Heart } from "lucide-react";
+import Image from "next/image";
+import { Dog } from "../utils/types";
 
 interface DogCardProps extends Dog {
   favoritedDogs: string[];
