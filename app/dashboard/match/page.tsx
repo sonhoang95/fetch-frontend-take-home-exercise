@@ -9,6 +9,7 @@ import { Dog } from "@/app/utils/types";
 import { Card, CardContent } from "@/components/ui/card";
 import Image from "next/image";
 
+console.log("hello word!");
 export default function MatchPage() {
   const [matchedDog, setMatchedDog] = useState<Dog | null>(null);
   const router = useRouter();
