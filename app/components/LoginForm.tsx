@@ -28,12 +28,10 @@ export default function LoginForm() {
 
   return (
     <div className="p-6">
-      <div className="text-center space-y-3 mb-8">
-        <h1 className="text-4xl font-semibold">
-          {isAuthenticated ? "You're already logged in!" : "Login"}
-        </h1>
+      <div className=" space-y-3 mb-8">
+        <h1 className="text-4xl font-semibold">Login</h1>
         {!isAuthenticated && (
-          <p className="text-gray-500 font-light">
+          <p className="text-gray-500 text-lg font-light">
             Ready to adopt a furry friend? Login to begin...
           </p>
         )}
@@ -54,7 +52,7 @@ export default function LoginForm() {
               className="w-full p-2 border rounded"
             />
           </div>
-          <div className="mb-8">
+          <div className="mb-10">
             <Label className="block text-sm font-medium mb-1" htmlFor="email">
               Email
             </Label>
@@ -69,7 +67,7 @@ export default function LoginForm() {
           </div>
           <Button
             type="submit"
-            className="w-full bg-blue-600 font-medium hover:bg-blue-700 text-white py-2 rounded"
+            className="w-full font-medium  text-white py-2 rounded"
           >
             Login
           </Button>

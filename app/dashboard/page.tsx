@@ -10,6 +10,8 @@ import { Dog } from "../utils/types";
 
 import BreedSortSelect from "../components/BreedSortSelect";
 import { PagePagination } from "../components/PagePagination";
+import { useAuth } from "../context/AuthContext";
+import { useRouter } from "next/navigation";
 
 function Dashboard() {
   const [dogs, setDogs] = useState<Dog[]>([]);
@@ -21,6 +23,8 @@ function Dashboard() {
   const [matchedDog, setMatchedDog] = useState<Dog>();
   const [totalPages, setTotalPages] = useState(0);
 
+  const router = useRouter();
+  const { isAuthenticated } = useAuth();
   const { toast } = useToast();
 
   // Fetch breeds
@@ -64,6 +68,11 @@ function Dashboard() {
     const match = await fetchMatchedDog(favoritedDogs);
     if (match) setMatchedDog(match);
   };
+
+  if (!isAuthenticated) {
+    router.push("/login"); // Redirect to login if not authenticated
+    return null;
+  }
 
   return (
     <section className="my-8 container mx-auto">

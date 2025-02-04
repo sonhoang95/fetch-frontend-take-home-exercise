@@ -1,30 +1,30 @@
 import Image from "next/image";
 import dogPortrait from "@/public/images/dog-portrait.jpg";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
+import CtaButton from "./components/CtaButton";
 
 export default function Home() {
   return (
-    <section className="relative w-full h-screen">
+    <section className="relative w-full h-[800px] md:h-screen">
+      {/* Responsive image */}
       <Image
         src={dogPortrait}
         alt="Dog Portrait"
         layout="fill"
         objectFit="cover"
-        objectPosition="center"
+        objectPosition="right"
         priority
         className="-z-10"
       />
 
-      <div className="absolute top-0 left-0 right-0 w-full h-full bg-black/20 flex items-center">
-        <div className="max-w-2xl py-6 pl-24 text-white">
-          <h1 className="text-5xl font-bold mb-4">Welcome to PetFinder!</h1>
-          <p className="text-xl mb-6">
+      <div className="absolute top-0 left-0 right-0 w-full h-full bg-black/40 flex md:items-center px-4 md:px-24">
+        <div className="max-w-xl p-6 rounded-2xl text-white text-center mt-24 md:mt-0 md:text-left">
+          <h1 className="text-4xl md:text-5xl font-bold mb-4 leading-tight">
+            Welcome to PetFinder!
+          </h1>
+          <p className="text-lg md:text-xl mb-6">
             Start searching for your furry friend today! Woof!
           </p>
-          <Button asChild size="lg">
-            <Link href="/login">Login</Link>
-          </Button>
+          <CtaButton />
         </div>
       </div>
     </section>

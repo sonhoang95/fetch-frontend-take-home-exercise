@@ -1,5 +1,5 @@
 import Image from "next/image";
-import CartoonDogImg from "@/public/images/cartoon-dog.jpg";
+import pugPortrait from "@/public/images/pug-portrait.jpg";
 import LoginForm from "../components/LoginForm";
 
 const LoginPage = () => {
@@ -8,8 +8,8 @@ const LoginPage = () => {
       {/* Image Container */}
       <div className="flex-1">
         <Image
-          src={CartoonDogImg}
-          alt="Cartoon dog"
+          src={pugPortrait}
+          alt="pug-portrait"
           className="object-cover rounded-lg"
           priority
           sizes="(max-width: 768px) 100vw, 50vw"
