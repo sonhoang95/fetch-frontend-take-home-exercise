@@ -12,7 +12,6 @@ import DogCard from "../components/DogCard";
 import { PagePagination } from "../components/PagePagination";
 import { useAuth } from "../context/AuthContext";
 import { Dog } from "../utils/types";
-import Link from "next/link";
 
 function Dashboard() {
   const [dogs, setDogs] = useState<Dog[]>([]);
