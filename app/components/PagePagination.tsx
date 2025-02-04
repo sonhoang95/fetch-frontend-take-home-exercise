@@ -73,7 +73,6 @@ export function PagePagination({
         {getVisiblePages().map((pageNumber) => (
           <PaginationItem key={pageNumber}>
             <PaginationLink
-              href="#"
               isActive={page === pageNumber}
               onClick={(e) => {
                 e.preventDefault();
@@ -101,13 +100,14 @@ export function PagePagination({
 
         <PaginationItem>
           <PaginationNext
-            href="#"
             onClick={(e) => {
               e.preventDefault();
               handlePageChange(page + 1);
             }}
             className={
-              page >= totalPages ? "pointer-events-none opacity-50" : ""
+              page >= totalPages
+                ? "pointer-events-none opacity-50"
+                : "cursor-pointer"
             }
           />
         </PaginationItem>
