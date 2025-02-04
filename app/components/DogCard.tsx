@@ -19,17 +19,17 @@ const DogCard = ({
   favoritedDogs,
 }: DogCardProps) => {
   return (
-    <Card key={id} className="relative h-[350px]">
-      <div className="h-1/2">
+    <Card key={id} className="relative md:h-[350px]">
+      <div className="md:h-1/2 w-full">
         <Image
           src={img}
           alt={name}
           width={300}
-          height={300}
-          className="h-full rounded-t-lg"
+          height={200}
+          className="h-[200px] md:h-full w-full rounded-t-lg"
         />
       </div>
-      <CardContent className="py-4 h-1/2 space-y-2">
+      <CardContent className="py-4 md:h-1/2 space-y-2">
         <h2 className="text-lg font-semibold tracking-wide mb-2">{name}</h2>
         <p className="text-gray-600 text-sm">
           <strong>Breed:</strong> {breed}

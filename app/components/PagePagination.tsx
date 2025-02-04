@@ -62,7 +62,7 @@ export function PagePagination({
         {page > MAX_VISIBLE_PAGES && (
           <>
             <PaginationItem>
-              <PaginationLink href="#" onClick={(e) => handlePageChange(1)}>
+              <PaginationLink onClick={() => handlePageChange(1)}>
                 1
               </PaginationLink>
             </PaginationItem>

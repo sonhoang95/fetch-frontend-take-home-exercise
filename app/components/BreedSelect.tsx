@@ -17,7 +17,7 @@ const BreedSelect = ({
   setSelectedBreed,
 }: BreedSelectProps) => {
   return (
-    <div>
+    <div className="w-full md:w-[180px]">
       <Select
         onValueChange={(value) => setSelectedBreed(value)}
         value={selectedBreed}

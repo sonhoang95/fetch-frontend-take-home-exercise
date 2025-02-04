@@ -2,16 +2,17 @@
 
 import { fetchBreeds, fetchDogs, fetchMatchedDog } from "@/app/utils/dogs";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import BreedSelect from "../components/BreedSelect";
-import DogCard from "../components/DogCard";
-import { Dog } from "../utils/types";
-import { Input } from "@/components/ui/input";
-import { useRouter, useSearchParams } from "next/navigation";
 import BreedSortSelect from "../components/BreedSortSelect";
+import DogCard from "../components/DogCard";
 import { PagePagination } from "../components/PagePagination";
 import { useAuth } from "../context/AuthContext";
+import { Dog } from "../utils/types";
+import Link from "next/link";
 
 function Dashboard() {
   const [dogs, setDogs] = useState<Dog[]>([]);
@@ -43,8 +44,17 @@ function Dashboard() {
     if (ageMin) queryParams.set("ageMin", ageMin);
     if (ageMax) queryParams.set("ageMax", ageMax);
 
-    router.push(`/dashboard?${queryParams.toString()}`);
+    router.replace(`/dashboard?${queryParams.toString()}`);
   }, [selectedBreed, sortOrder, page, ageMin, ageMax, router]);
+
+  const clearFilters = () => {
+    setSelectedBreed("");
+    setAgeMin("");
+    setAgeMax("");
+    setSortOrder("breed:asc");
+    setPage(1);
+    router.replace("/dashboard"); // Clear all query params
+  };
 
   useEffect(() => {
     fetchDogs({
@@ -77,11 +87,13 @@ function Dashboard() {
     try {
       const match = await fetchMatchedDog(favoritedDogs);
       if (match) {
+        setMatchedDog(match);
         router.push(`/dashboard/match?favorites=${match.id}`);
       } else {
         toast({ title: "No match found. Try again!" });
       }
     } catch (error) {
+      console.error(error);
       toast({ title: "Error fetching match. Please try again later." });
     }
   };
@@ -92,11 +104,11 @@ function Dashboard() {
   }
 
   return (
-    <section className="my-8 container mx-auto">
+    <section className="my-8 container mx-auto px-8 md:px-0">
       <h2 className="mb-2 text-lg font-medium tracking-wide">Filters</h2>
-      <div className="flex flex-col md:flex-row items-center justify-between mb-8">
+      <div className="flex flex-col md:flex-row md:items-center justify-between mb-8">
         <div>
-          <div className="flex items-center gap-6">
+          <div className="flex flex-col md:flex-row md:items-center gap-6 w-full md:w-auto mb-6 md:mb-0">
             <BreedSelect
               breeds={breeds}
               selectedBreed={selectedBreed}
@@ -104,27 +116,34 @@ function Dashboard() {
             />
             <Input
               placeholder="Min Age"
-              className="max-w-[200px]"
+              className="md:max-w-[200px]"
               value={ageMin}
               onChange={(e) => setAgeMin(e.currentTarget.value)}
             />
             <Input
               placeholder="Max Age"
-              className="max-w-[200px]"
+              className="md:max-w-[200px]"
               value={ageMax}
               onChange={(e) => setAgeMax(e.currentTarget.value)}
             />
+            <Button variant="link" onClick={clearFilters}>
+              Clear Filters
+            </Button>
           </div>
         </div>
-        <div className="flex flex-col md:flex-row items-center space-x-6">
+        <div className="flex flex-col md:flex-row items-center md:space-x-6 space-y-6 md:space-y-0">
           <BreedSortSelect sortOrder={sortOrder} setSortOrder={setSortOrder} />
-          <Button onClick={handleMatch} disabled={favoritedDogs.length <= 0}>
+          <Button
+            className="w-full"
+            onClick={handleMatch}
+            disabled={favoritedDogs.length <= 0}
+          >
             Generate Match
           </Button>
         </div>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-6 gap-3 md:gap-6 mb-10">
+      <div className="grid grid-cols-1 md:grid-cols-6 gap-4 md:gap-6 mb-10">
         {dogs?.length === 0 ? (
           <p>No dogs found</p>
         ) : (

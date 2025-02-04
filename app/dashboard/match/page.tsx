@@ -30,7 +30,7 @@ export default function MatchPage() {
       {matchedDog ? (
         <>
           <h2 className="text-xl font-semibold mb-8 text-center">
-            Congratulations! We've found your perfect furry friend!
+            Congratulations! We&apos;ve found your perfect furry friend!
           </h2>
           <Card className="relative h-[350px]">
             <div className="h-1/2">

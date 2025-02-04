@@ -1,6 +1,5 @@
 "use client";
 
-import { Skeleton } from "@/components/ui/skeleton";
 import { SkeletonCard } from "../components/SkeletonCard";
 
 function Loading() {

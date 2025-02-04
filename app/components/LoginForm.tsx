@@ -28,15 +28,17 @@ export default function LoginForm() {
 
   return (
     <div className="p-6">
-      <div className=" space-y-3 mb-8">
-        <h1 className="text-3xl md:text-4xl font-semibold">Login</h1>
-        {!isAuthenticated && (
+      {!isAuthenticated && (
+        <div className=" space-y-3 mb-8">
+          <h1 className="text-3xl md:text-4xl font-semibold">Login</h1>
+
           <p className="text-gray-500 md:text-lg font-light">
             Ready to adopt a furry friend? Login to begin...
           </p>
-        )}
-        {error && <p className="text-red-500 mb-2">{error}</p>}
-      </div>
+
+          {error && <p className="text-red-500 mb-2">{error}</p>}
+        </div>
+      )}
       {!isAuthenticated && (
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
