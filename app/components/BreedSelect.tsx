@@ -19,13 +19,12 @@ const BreedSelect = ({
 }: BreedSelectProps) => {
   return (
     <div>
-      <Label>Select Breed:</Label>
       <Select
         onValueChange={(value) => setSelectedBreed(value)}
         value={selectedBreed}
       >
         <SelectTrigger className="w-[180px]">
-          <SelectValue placeholder="All Breeds" />
+          <SelectValue placeholder="Select a Breed" />
         </SelectTrigger>
         <SelectContent>
           {breeds.map((breed, index) => (

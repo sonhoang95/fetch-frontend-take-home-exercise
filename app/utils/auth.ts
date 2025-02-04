@@ -1,5 +1,4 @@
 export async function loginUser(name: string, email: string) {
-  console.log(process.env.API_BASE_URL);
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/login`,
     {
@@ -12,5 +11,22 @@ export async function loginUser(name: string, email: string) {
   if (!response.ok) {
     throw new Error("Login failed. Please check your credentials");
   }
+  return response;
+}
+
+export async function logoutUser() {
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/logout`,
+    {
+      method: "POST",
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error("Something went wrong. Cannot logout at the moment");
+  }
+
   return response;
 }

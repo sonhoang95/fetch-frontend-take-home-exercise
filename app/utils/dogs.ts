@@ -16,9 +16,9 @@ export async function fetchBreeds() {
 }
 
 export async function fetchDogs({
-  breed,
-  ageMin,
-  ageMax,
+  breed = "",
+  ageMin = "0",
+  ageMax = "100",
   page = 1,
   sort = "breed:asc",
 }) {
@@ -26,9 +26,9 @@ export async function fetchDogs({
   const from = (page - 1) * size;
 
   const queryParams = new URLSearchParams({
-    breeds: breed || [],
-    ageMin: ageMin || "",
-    ageMax: ageMax || "",
+    breed: breed || "",
+    ageMin: ageMin || "0",
+    ageMax: ageMax || "100",
     size: size.toString(),
     from: from.toString(),
     sort: sort || "breed:asc",
@@ -73,23 +73,55 @@ export async function fetchDogs({
   }
 }
 
-// export async function fetchDogMatch(favoritedDogIds) {
-//   const response = await fetch(
-//     "https://frontend-take-home-service.fetch.com/dogs/match",
-//     {
-//       method: "POST",
-//       headers: {
-//         "Content-Type": "application/json",
-//       },
-//       body: JSON.stringify(favoritedDogIds),
-//       credentials: "include", // Include the auth cookie
-//     }
-//   );
+export async function fetchMatchedDog(favoritedDogIds: string[]) {
+  try {
+    // Step 1: Fetch the match from the API
+    const matchResponse = await fetch(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/dogs/match`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(favoritedDogIds),
+        credentials: "include",
+      }
+    );
 
-//   if (response.ok) {
-//     const match = await response.json();
-//     return match;
-//   } else {
-//     throw new Error("Failed to fetch match");
-//   }
-// }
+    if (!matchResponse.ok) {
+      throw new Error("Failed to fetch dog match");
+    }
+
+    const matchData = await matchResponse.json(); // Assuming API returns a JSON object with a match property
+
+    // Extract the matched dog ID from the 'match' property
+    const matchedDogId = matchData.match;
+
+    if (!matchedDogId) {
+      throw new Error("No matched dog found");
+    }
+
+    // Step 2: Fetch the specific dog details based on the matched dog ID
+    const dogDetailsResponse = await fetch(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/dogs`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify([matchedDogId]), // API expects an array of IDs
+        credentials: "include",
+      }
+    );
+
+    if (!dogDetailsResponse.ok) {
+      throw new Error("Failed to fetch matched dog details");
+    }
+
+    const dogDetails = await dogDetailsResponse.json();
+    return dogDetails[0]; // Return the specific dog object
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}

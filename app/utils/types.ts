@@ -1,5 +1,5 @@
 export type Dog = {
-  id?: string;
+  id: string;
   img: string;
   name: string;
   age: number;

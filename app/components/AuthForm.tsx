@@ -6,12 +6,14 @@ import { loginUser } from "@/app/utils/auth";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import { useToast } from "@/hooks/use-toast";
 
 export default function AuthForm() {
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
+  const { toast } = useToast();
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -20,6 +22,7 @@ export default function AuthForm() {
     try {
       await loginUser(name, email);
       router.push("/dashboard");
+      toast({ title: "Login Successfully" });
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : "An unexpected error occurred";
