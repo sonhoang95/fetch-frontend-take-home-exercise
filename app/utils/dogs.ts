@@ -123,7 +123,7 @@ export async function fetchMatchedDog(favoritedDogIds: string[]) {
     }
 
     const dogDetails = await dogDetailsResponse.json();
-    return dogDetails[0]; // Return the specific dog object
+    return dogDetails[0];
   } catch (error) {
     console.error(error);
     return null;

@@ -12,6 +12,8 @@ import BreedSortSelect from "../components/BreedSortSelect";
 import { PagePagination } from "../components/PagePagination";
 import { useAuth } from "../context/AuthContext";
 import { useRouter } from "next/navigation";
+import { Input } from "@/components/ui/input";
+import Link from "next/link";
 
 function Dashboard() {
   const [dogs, setDogs] = useState<Dog[]>([]);
@@ -63,10 +65,17 @@ function Dashboard() {
     });
   };
 
-  // Handle match
   const handleMatch = async () => {
-    const match = await fetchMatchedDog(favoritedDogs);
-    if (match) setMatchedDog(match);
+    try {
+      const match = await fetchMatchedDog(favoritedDogs);
+      if (match) {
+        router.push(`/dashboard/match?favorites=${match.id}`);
+      } else {
+        toast({ title: "No match found. Try again!" });
+      }
+    } catch (error) {
+      toast({ title: "Error fetching match. Please try again later." });
+    }
   };
 
   if (!isAuthenticated) {
@@ -76,53 +85,43 @@ function Dashboard() {
 
   return (
     <section className="my-8 container mx-auto">
+      <h2 className="mb-2 text-lg font-medium tracking-wide">Filters</h2>
       <div className="flex flex-col md:flex-row items-center justify-between mb-8">
-        <BreedSelect
-          breeds={breeds}
-          selectedBreed={selectedBreed}
-          setSelectedBreed={setSelectedBreed}
-        />
+        <div>
+          <div className="flex items-center gap-6">
+            <BreedSelect
+              breeds={breeds}
+              selectedBreed={selectedBreed}
+              setSelectedBreed={setSelectedBreed}
+            />
+            <Input placeholder="Age" className="max-w-[200px]" />
+            <Input placeholder="Location (Zipcode)" className="max-w-[200px]" />
+          </div>
+        </div>
         <div className="flex flex-col md:flex-row items-center space-x-6">
           <BreedSortSelect sortOrder={sortOrder} setSortOrder={setSortOrder} />
           {/* Match Button */}
-          <Button onClick={handleMatch}>Generate Match</Button>
+          <Button onClick={handleMatch} disabled={favoritedDogs.length <= 0}>
+            Generate Match
+          </Button>
         </div>
       </div>
 
       {/* Display Dogs */}
-      {!matchedDog && (
-        <div className="grid grid-cols-2 md:grid-cols-6 gap-3 md:gap-6 mb-10">
-          {dogs?.length === 0 ? (
-            <p>No dogs found</p>
-          ) : (
-            dogs?.map((dog) => (
-              <DogCard
-                toggleFavorite={toggleFavorite}
-                favoritedDogs={favoritedDogs}
-                key={dog.id}
-                {...dog}
-              />
-            ))
-          )}
-        </div>
-      )}
-
-      {/* Display Matched Dog */}
-      {matchedDog && (
-        <div>
-          <h2 className="text-xl font-semibold mb-8 text-center">
-            Congratulations! We've found your perfect furry friend!
-          </h2>
-          <div className="max-w-[300px] h-[400px]">
+      <div className="grid grid-cols-2 md:grid-cols-6 gap-3 md:gap-6 mb-10">
+        {dogs?.length === 0 ? (
+          <p>No dogs found</p>
+        ) : (
+          dogs?.map((dog) => (
             <DogCard
-              {...matchedDog}
               toggleFavorite={toggleFavorite}
               favoritedDogs={favoritedDogs}
-              key={matchedDog?.id}
+              key={dog.id}
+              {...dog}
             />
-          </div>
-        </div>
-      )}
+          ))
+        )}
+      </div>
 
       {/* Pagination */}
       {!matchedDog && (
