@@ -2,27 +2,13 @@
 
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { useAuth } from "../context/AuthContext";
 
-import { useRouter } from "next/navigation";
-import { logoutUser } from "../utils/auth";
-import { useToast } from "@/hooks/use-toast";
-
-interface NavbarProps {
-  isLoggedIn: boolean;
-}
-
-const Navbar: React.FC<NavbarProps> = ({ isLoggedIn }) => {
-  const router = useRouter();
-  const { toast } = useToast();
+const Navbar = () => {
+  const { logout, isAuthenticated } = useAuth();
 
   const handleLogoutUser = async () => {
-    try {
-      await logoutUser();
-      toast({ title: "Successfully logged out" });
-      router.push("/"); // Redirect to clear UI
-    } catch (error) {
-      toast({ variant: "destructive", title: "Logout failed" });
-    }
+    await logout();
   };
 
   return (
@@ -31,7 +17,7 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn }) => {
         <Link href="/">
           <h1 className="text-xl font-semibold tracking-wider">PetFinder</h1>
         </Link>
-        {isLoggedIn ? (
+        {isAuthenticated ? (
           <Button onClick={handleLogoutUser}>Logout</Button>
         ) : (
           <Link href="/login">

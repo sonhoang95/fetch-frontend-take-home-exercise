@@ -49,7 +49,6 @@ export async function fetchDogs({
 
   if (response.ok) {
     const data = await response.json();
-    console.log(data);
     const resultIds = data.resultIds;
     const totalPages = data.total;
 

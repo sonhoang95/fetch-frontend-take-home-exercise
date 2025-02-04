@@ -1,6 +1,6 @@
 import Image from "next/image";
-import AuthForm from "../components/AuthForm";
 import CartoonDogImg from "@/public/images/cartoon-dog.jpg";
+import LoginForm from "../components/LoginForm";
 
 const LoginPage = () => {
   return (
@@ -18,7 +18,7 @@ const LoginPage = () => {
 
       {/* Form Container */}
       <div className="flex-1">
-        <AuthForm />
+        <LoginForm />
       </div>
     </section>
   );
