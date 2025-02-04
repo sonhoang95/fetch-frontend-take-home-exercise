@@ -12,6 +12,7 @@ import DogCard from "../components/DogCard";
 import { PagePagination } from "../components/PagePagination";
 import { useAuth } from "../context/AuthContext";
 import { Dog } from "../utils/types";
+import ZipCodeInput from "../components/ZipCodeInput";
 
 function Dashboard() {
   const [dogs, setDogs] = useState<Dog[]>([]);
@@ -21,9 +22,10 @@ function Dashboard() {
   const [sortOrder, setSortOrder] = useState("breed:asc");
   const [favoritedDogs, setFavoritedDogs] = useState<string[]>([]);
   const [matchedDog, setMatchedDog] = useState<Dog>();
-  const [totalPages, setTotalPages] = useState(0);
+  const [totalResults, setTotalResults] = useState(0);
   const [ageMin, setAgeMin] = useState("");
   const [ageMax, setAgeMax] = useState("");
+  const [zipCodes, setZipCodes] = useState<string[]>([]);
 
   const router = useRouter();
   const { isAuthenticated } = useAuth();
@@ -42,9 +44,10 @@ function Dashboard() {
     if (page) queryParams.set("page", page.toString());
     if (ageMin) queryParams.set("ageMin", ageMin);
     if (ageMax) queryParams.set("ageMax", ageMax);
+    if (zipCodes) queryParams.set("zipCodes", zipCodes.toString());
 
     router.replace(`/dashboard?${queryParams.toString()}`);
-  }, [selectedBreed, sortOrder, page, ageMin, ageMax, router]);
+  }, [selectedBreed, sortOrder, page, ageMin, ageMax, zipCodes, router]);
 
   const clearFilters = () => {
     setSelectedBreed("");
@@ -52,6 +55,7 @@ function Dashboard() {
     setAgeMax("");
     setSortOrder("breed:asc");
     setPage(1);
+    setZipCodes([]);
     router.replace("/dashboard"); // Clear all query params
   };
 
@@ -62,11 +66,12 @@ function Dashboard() {
       sort: sortOrder,
       ageMin,
       ageMax,
+      zipCodes,
     }).then((data) => {
       setDogs(data?.dogDetailsData);
-      setTotalPages(data?.totalPages);
+      setTotalResults(data?.totalResults);
     });
-  }, [selectedBreed, page, sortOrder, ageMin, ageMax]);
+  }, [selectedBreed, page, sortOrder, ageMin, ageMax, zipCodes]);
 
   const toggleFavorite = (dogId: string) => {
     setFavoritedDogs((prev) => {
@@ -105,7 +110,7 @@ function Dashboard() {
   return (
     <section className="my-8 container mx-auto px-8 md:px-0">
       <h2 className="mb-2 text-lg font-medium tracking-wide">Filters</h2>
-      <div className="flex flex-col md:flex-row md:items-center justify-between mb-8">
+      <div className="flex flex-col md:flex-row md:items-center justify-between mb-12">
         <div>
           <div className="flex flex-col md:flex-row md:items-center gap-6 w-full md:w-auto mb-6 md:mb-0">
             <BreedSelect
@@ -125,7 +130,12 @@ function Dashboard() {
               value={ageMax}
               onChange={(e) => setAgeMax(e.currentTarget.value)}
             />
-            <Button variant="link" onClick={clearFilters}>
+            <ZipCodeInput zipCodes={zipCodes} setZipCodes={setZipCodes} />
+            <Button
+              variant="link"
+              onClick={clearFilters}
+              className="mt-6 md:mt-0"
+            >
               Clear Filters
             </Button>
           </div>
@@ -158,7 +168,11 @@ function Dashboard() {
       </div>
 
       {!matchedDog && (
-        <PagePagination page={page} setPage={setPage} totalPages={totalPages} />
+        <PagePagination
+          page={page}
+          setPage={setPage}
+          totalResults={totalResults}
+        />
       )}
     </section>
   );

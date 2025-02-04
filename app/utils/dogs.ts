@@ -1,3 +1,5 @@
+import { DogFilters } from "./types";
+
 export async function fetchBreeds() {
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_API_BASE_URL}/dogs/breeds`,
@@ -16,12 +18,13 @@ export async function fetchBreeds() {
 }
 
 export async function fetchDogs({
-  breed = "",
-  ageMin = "0",
-  ageMax = "100",
+  breed,
+  ageMin,
+  ageMax,
   page = 1,
   sort = "breed:asc",
-}) {
+  zipCodes,
+}: DogFilters) {
   const size = 24;
   const from = (page - 1) * size;
 
@@ -37,6 +40,10 @@ export async function fetchDogs({
     queryParams.set("breeds", breed);
   }
 
+  if (zipCodes.length > 0) {
+    zipCodes.forEach((zip: string) => queryParams.append("zipCodes", zip));
+  }
+
   const response = await fetch(
     `${
       process.env.NEXT_PUBLIC_API_BASE_URL
@@ -50,7 +57,7 @@ export async function fetchDogs({
   if (response.ok) {
     const data = await response.json();
     const resultIds = data.resultIds;
-    const totalPages = data.total;
+    const totalResults = data.total;
 
     if (resultIds.length > 0) {
       // Fetch full dog data using the resultIds
@@ -67,7 +74,7 @@ export async function fetchDogs({
       );
       if (dogDetailsResponse.ok) {
         const dogDetailsData = await dogDetailsResponse.json();
-        return { dogDetailsData, totalPages };
+        return { dogDetailsData, totalResults };
       } else {
         console.error("Failed to fetch dog details");
       }

@@ -13,13 +13,15 @@ import {
 export function PagePagination({
   page,
   setPage,
-  totalPages,
+  totalResults,
 }: {
   page: number;
   setPage: (page: number) => void;
-  totalPages: number;
+  totalResults: number;
 }) {
+  const RESULTS_PER_PAGE = 24;
   const MAX_VISIBLE_PAGES = 5;
+  const totalPages = Math.floor(totalResults / RESULTS_PER_PAGE);
 
   const handlePageChange = (newPage: number) => {
     if (newPage >= 1 && newPage <= totalPages) {
@@ -28,15 +30,17 @@ export function PagePagination({
   };
 
   const getVisiblePages = () => {
-    const pages = [];
+    const pages: number[] = [];
     const half = Math.floor(MAX_VISIBLE_PAGES / 2);
     let start = Math.max(1, page - half);
     let end = Math.min(totalPages, page + half);
 
-    if (page <= half) {
-      end = Math.min(totalPages, MAX_VISIBLE_PAGES);
-    } else if (page + half >= totalPages) {
-      start = Math.max(1, totalPages - MAX_VISIBLE_PAGES + 1);
+    if (end - start + 1 < MAX_VISIBLE_PAGES) {
+      if (start === 1) {
+        end = Math.min(totalPages, start + MAX_VISIBLE_PAGES - 1);
+      } else if (end === totalPages) {
+        start = Math.max(1, end - MAX_VISIBLE_PAGES + 1);
+      }
     }
 
     for (let i = start; i <= end; i++) {
@@ -45,17 +49,20 @@ export function PagePagination({
     return pages;
   };
 
+  if (totalPages <= 1) return null;
+
   return (
     <Pagination>
       <PaginationContent>
         <PaginationItem>
           <PaginationPrevious
-            href="#"
             onClick={(e) => {
               e.preventDefault();
               handlePageChange(page - 1);
             }}
-            className={page <= 1 ? "pointer-events-none opacity-50" : ""}
+            className={
+              page <= 1 ? "pointer-events-none opacity-50" : "cursor-pointer"
+            }
           />
         </PaginationItem>
 
@@ -73,6 +80,7 @@ export function PagePagination({
         {getVisiblePages().map((pageNumber) => (
           <PaginationItem key={pageNumber}>
             <PaginationLink
+              className="cursor-pointer"
               isActive={page === pageNumber}
               onClick={(e) => {
                 e.preventDefault();
@@ -88,7 +96,10 @@ export function PagePagination({
           <>
             <PaginationEllipsis />
             <PaginationItem>
-              <PaginationLink onClick={() => handlePageChange(totalPages)}>
+              <PaginationLink
+                className="cursor-pointer"
+                onClick={() => handlePageChange(totalPages)}
+              >
                 {totalPages}
               </PaginationLink>
             </PaginationItem>
